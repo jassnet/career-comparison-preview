@@ -128,16 +128,65 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
   padding: 8px 16px;
   border: 0;
   border-radius: 24px;
-  background: #e7edeb;
-  color: #4b5f6b;
+  background: var(--green);
+  color: #fff;
   font: inherit;
   font-weight: 700;
+  cursor: pointer;
+}
+.diagnosis-submit:hover:not(:disabled) {
+  background: #104e46;
+}
+.diagnosis-submit:disabled {
+  background: #e7edeb;
+  color: #4b5f6b;
+  cursor: default;
 }
 .diagnosis-note {
   margin: 6px 0 0;
   color: #4b5f6b;
   font-size: 13px;
   text-align: center;
+}
+.diagnosis-results {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid #d3e2dd;
+  border-radius: 8px;
+  background: #fff;
+}
+.diagnosis-results h3 {
+  margin: 0 0 12px;
+  color: var(--navy);
+  font-size: 18px;
+  line-height: 1.5;
+  scroll-margin-top: 16px;
+}
+.diagnosis-matches {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.diagnosis-match {
+  padding: 10px 12px;
+  border: 1px solid #d3e2dd;
+  border-radius: 4px;
+  background: #f1f7f5;
+}
+.diagnosis-match a {
+  color: var(--green);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+.diagnosis-match p {
+  margin: 2px 0 0;
+  font-size: 14px;
+}
+.diagnosis-results .diagnosis-note {
+  margin-top: 10px;
+  text-align: left;
 }
 @media (max-width: 560px) {
   .diagnosis { padding: 20px 14px 24px; }
@@ -190,15 +239,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
       </div>
       <div class="diagnosis-field diagnosis-wide">
         <label class="diagnosis-label" for="diagnosis-job">職種</label>
-        <select id="diagnosis-job">
+        <select id="diagnosis-job" required>
           <option value="">選択する</option>
-          <option>ITエンジニア</option>
-          <option>技術職・クリエイティブ</option>
-          <option>医療・福祉・保育</option>
-          <option>不動産・金融</option>
-          <option>公務員</option>
-          <option>第二新卒・フリーター・無職</option>
-          <option>その他</option>
+          <option value="it">ITエンジニア</option>
+          <option value="technical">技術職・クリエイティブ</option>
+          <option value="care">医療・福祉・保育</option>
+          <option value="property-finance">不動産・金融</option>
+          <option value="public-service">公務員</option>
+          <option value="early-career">第二新卒・フリーター・無職</option>
+          <option value="other">その他</option>
         </select>
       </div>
       <div class="diagnosis-field diagnosis-wide" role="group" aria-labelledby="diagnosis-location-label">
@@ -279,12 +328,57 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
         </details>
       </div>
     </div>
-    <button type="button" class="diagnosis-submit" aria-describedby="diagnosis-note" disabled>この条件で診断する</button>
-    <p class="diagnosis-note" id="diagnosis-note">確認版では条件の選択まで行えます。</p>
+    <button type="submit" class="diagnosis-submit" aria-describedby="diagnosis-note" disabled>この条件で診断する</button>
+    <p class="diagnosis-note" id="diagnosis-note">職種に応じて、掲載中の転職エージェントから候補を表示します。</p>
+    <noscript><p class="diagnosis-note">診断結果の表示にはJavaScriptが必要です。</p></noscript>
   </form>
+  <section class="diagnosis-results" id="diagnosis-results" aria-labelledby="diagnosis-result-title" hidden>
+    <h3 id="diagnosis-result-title" tabindex="-1"></h3>
+    <ul class="diagnosis-matches"></ul>
+    <p class="diagnosis-note">求人の取り扱いや利用条件は各社の公式サイトでご確認ください。</p>
+  </section>
+  <template id="diagnosis-match-template">
+    <li class="diagnosis-match"><a></a><p></p></li>
+  </template>
 </section>
 <script>
   {
+    const matchesByJob = {
+      it: [
+        { service: "doda", reason: "IT・Webエンジニア向けの求人を職種別に探せます。" },
+        { service: "mynavi", reason: "社内SEやシステム開発などの求人を扱っています。" },
+      ],
+      technical: [
+        { service: "doda", reason: "機械・電気系の技術職や、デザインなどのクリエイティブ職の求人を探せます。" },
+        { service: "mynavi", reason: "研究開発や設計など、技術職の求人を扱っています。" },
+      ],
+      care: [
+        { service: "doda", reason: "医療系専門職、福祉、保育士・幼稚園教諭などの求人を探せます。" },
+      ],
+      "property-finance": [
+        { service: "recruit", reason: "不動産投資や金融機関の法人営業などの求人を扱っています。" },
+        { service: "doda", reason: "金融系専門職や不動産関連の求人を職種別に探せます。" },
+      ],
+      "public-service": [
+        { service: "recruit", reason: "公務員の経験を活かした民間企業への転職を相談できます。" },
+        { service: "doda", reason: "官公庁や自治体など、公共機関の中途採用情報を探せます。" },
+      ],
+      "early-career": [
+        { service: "doda", reason: "第二新卒歓迎の求人を探せます。就業経験によっては、エージェントの支援を受けにくい場合があります。" },
+        { service: "mynavi", reason: "第二新卒や職種未経験の方を歓迎する求人を扱っています。" },
+      ],
+      other: [
+        { service: "recruit", reason: "希望や経歴を伝え、幅広い業界・職種から求人の紹介を相談できます。" },
+        { service: "doda", reason: "職種別の求人検索とエージェントへの相談を利用できます。" },
+        { service: "mynavi", reason: "キャリアアドバイザーに希望を伝え、求人紹介や選考の支援を受けられます。" },
+      ],
+    };
+    const form = document.querySelector(".diagnosis-form");
+    const job = document.querySelector("#diagnosis-job");
+    const results = document.querySelector("#diagnosis-results");
+    const resultTitle = document.querySelector("#diagnosis-result-title");
+    const matchList = results.querySelector(".diagnosis-matches");
+    const matchTemplate = document.querySelector("#diagnosis-match-template");
     const locationPicker = document.querySelector("#diagnosis-location");
     const locationCount = document.querySelector("#diagnosis-location-count");
     const prefectures = locationPicker.querySelectorAll("input");
@@ -299,6 +393,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
       for (const prefecture of prefectures) prefecture.checked = false;
       updateLocationCount();
     });
+
+    job.addEventListener("change", () => {
+      results.hidden = true;
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const matches = matchesByJob[job.value];
+      if (!matches) return;
+
+      const items = matches.map(({ service, reason }) => {
+        const item = matchTemplate.content.cloneNode(true);
+        const link = item.querySelector("a");
+        link.href = `#${service}`;
+        link.textContent = document.getElementById(service).querySelector("h3").textContent;
+        item.querySelector("p").textContent = reason;
+        return item;
+      });
+
+      resultTitle.textContent = `「${job.selectedOptions[0].textContent}」の候補`;
+      matchList.replaceChildren(...items);
+      results.hidden = false;
+      resultTitle.focus();
+    });
+
+    form.querySelector(".diagnosis-submit").disabled = false;
   }
 </script>
 <div class="band">リクルートエージェント・doda・マイナビ転職エージェントを比較</div><section class="container" id="comparison"><h2 class="section-title"><small>＼ 気になる3サービスをひと目で ／</small>転職サービスの比較表</h2><p class="hint">表を横にスクロールして3サービスを比較できます →</p><div class="table-scroll" role="region" aria-label="比較表。横にスクロールできます" tabindex="0"><table class="compare"><thead><tr><th>比較項目</th><th><a href="#recruit"><span class="rank-circle">1</span>リクルートエージェント</a><img src="service-recruit-v3.png" alt=""></th><th><a href="#doda"><span class="rank-circle">2</span>doda</a><img src="service-doda-v3.png" alt=""></th><th><a href="#mynavi"><span class="rank-circle">3</span>マイナビ転職エージェント</a><img src="service-mynavi-v3.png" alt=""></th></tr></thead><tbody><tr><th>利用料金</th><td>無料</td><td>無料</td><td>無料</td></tr><tr><th>求人の探し方</th><td>求人検索・アドバイザーによる紹介</td><td>求人検索・エージェントによる紹介</td><td>キャリアアドバイザーによる紹介</td></tr><tr><th>主な支援</th><td>書類添削・面接対策・条件交渉</td><td>書類添削・面接サポート・日程調整</td><td>転職相談・求人紹介・選考支援</td></tr><tr><th>サービス詳細</th><td><a class="small-btn" href="#recruit">詳しく見る</a></td><td><a class="small-btn" href="#doda">詳しく見る</a></td><td><a class="small-btn" href="#mynavi">詳しく見る</a></td></tr></tbody></table></div><p class="notes">画像はイメージです。利用状況や求人状況により、受けられる支援は異なります。登録・紹介・選考の結果を保証するものではありません。</p><p class="disclaimer">確認用の制作版です。掲載順は依頼で指定された順であり、人気・満足度・サービスの優劣を示す順位ではありません。最新の条件は各社の公式サイトでご確認ください。</p></section><section class="container detail-section" id="details"><h2 class="section-title"><small>3サービスの</small>特徴を詳しく比較</h2><div class="detail-list">
