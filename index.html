@@ -184,6 +184,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
   margin: 2px 0 0;
   font-size: 14px;
 }
+.diagnosis-conditions {
+  margin: -4px 0 12px;
+  color: #4b5f6b;
+  font-size: 13px;
+}
+.diagnosis-evidence {
+  margin: 6px 0 0;
+  padding-left: 1.3em;
+  color: #304c4b;
+  font-size: 13px;
+}
+.diagnosis-results .diagnosis-note a {
+  color: var(--green);
+  font-weight: 700;
+}
 .diagnosis-results .diagnosis-note {
   margin-top: 10px;
   text-align: left;
@@ -212,29 +227,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
         <label class="diagnosis-label" for="diagnosis-age">年齢</label>
         <select id="diagnosis-age">
           <option value="">選択する</option>
-          <option>24歳以下</option>
-          <option>25歳〜29歳</option>
-          <option>30歳〜34歳</option>
-          <option>35歳〜39歳</option>
-          <option>40歳〜44歳</option>
-          <option>45歳〜49歳</option>
-          <option>50歳以上</option>
+          <option value="24">24歳以下</option>
+          <option value="29">25歳〜29歳</option>
+          <option value="34">30歳〜34歳</option>
+          <option value="39">35歳〜39歳</option>
+          <option value="44">40歳〜44歳</option>
+          <option value="49">45歳〜49歳</option>
+          <option value="50">50歳以上</option>
         </select>
       </div>
       <div class="diagnosis-field diagnosis-income">
-        <label class="diagnosis-label" for="diagnosis-income">年収</label>
+        <label class="diagnosis-label" for="diagnosis-income">希望年収</label>
         <select id="diagnosis-income">
           <option value="">選択する</option>
-          <option>〜199万円</option>
-          <option>200〜299万円</option>
-          <option>300〜399万円</option>
-          <option>400〜499万円</option>
-          <option>500〜599万円</option>
-          <option>600〜699万円</option>
-          <option>700〜799万円</option>
-          <option>800〜899万円</option>
-          <option>900〜999万円</option>
-          <option>1000万円〜</option>
+          <option value="0">〜199万円</option>
+          <option value="200">200〜299万円</option>
+          <option value="300">300〜399万円</option>
+          <option value="400">400〜499万円</option>
+          <option value="500">500〜599万円</option>
+          <option value="600">600〜699万円</option>
+          <option value="700">700〜799万円</option>
+          <option value="800">800〜899万円</option>
+          <option value="900">900〜999万円</option>
+          <option value="1000">1000万円〜</option>
         </select>
       </div>
       <div class="diagnosis-field diagnosis-wide">
@@ -251,7 +266,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
         </select>
       </div>
       <div class="diagnosis-field diagnosis-wide" role="group" aria-labelledby="diagnosis-location-label">
-        <span class="diagnosis-label" id="diagnosis-location-label">勤務地</span>
+        <span class="diagnosis-label" id="diagnosis-location-label">希望勤務地</span>
         <details id="diagnosis-location">
           <summary><span id="diagnosis-location-count">指定なし</span> <small>（複数選択可）</small></summary>
           <div class="diagnosis-location-options">
@@ -329,16 +344,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
       </div>
     </div>
     <button type="submit" class="diagnosis-submit" aria-describedby="diagnosis-note" disabled>この条件で診断する</button>
-    <p class="diagnosis-note" id="diagnosis-note">職種に応じて、掲載中の転職エージェントから候補を表示します。</p>
+    <p class="diagnosis-note" id="diagnosis-note">職種は必須です。年齢・希望年収・希望勤務地も選ぶと候補を絞り込めます。性別は判定に使いません。</p>
     <noscript><p class="diagnosis-note">診断結果の表示にはJavaScriptが必要です。</p></noscript>
   </form>
   <section class="diagnosis-results" id="diagnosis-results" aria-labelledby="diagnosis-result-title" hidden>
     <h3 id="diagnosis-result-title" tabindex="-1"></h3>
+    <p class="diagnosis-conditions" id="diagnosis-conditions" hidden></p>
     <ul class="diagnosis-matches"></ul>
-    <p class="diagnosis-note">求人の取り扱いや利用条件は各社の公式サイトでご確認ください。</p>
+    <p class="diagnosis-note" id="diagnosis-result-note" hidden></p>
+    <p class="diagnosis-note">結果は各社の公開情報を参考にしています。最新の求人や利用条件は各社の公式サイトでご確認ください。</p>
+    <p class="diagnosis-note" id="diagnosis-other-agents" hidden><a href="#comparison">掲載中の3社を比較する</a></p>
   </section>
   <template id="diagnosis-match-template">
-    <li class="diagnosis-match"><a></a><p></p></li>
+    <li class="diagnosis-match"><a class="diagnosis-match-name"></a><p class="diagnosis-match-reason"></p><ul class="diagnosis-evidence" hidden></ul></li>
   </template>
 </section>
 <script>
@@ -373,10 +391,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
         { service: "mynavi", reason: "キャリアアドバイザーに希望を伝え、求人紹介や選考の支援を受けられます。" },
       ],
     };
+    // Public comparison evidence checked on 2026-11-19. These are not service eligibility rules.
+    const serviceCriteria = {
+      recruit: {
+        ageGroups: ["50"],
+        ageReason: "50代の方向けの転職ガイドがあります。",
+        salaryMinimum: 300,
+        offices: ["東京都", "北海道", "宮城県", "栃木県", "埼玉県", "神奈川県", "石川県", "新潟県", "長野県", "静岡県", "愛知県", "京都府", "大阪府", "兵庫県", "岡山県", "広島県", "福岡県"],
+      },
+      doda: {
+        ageGroups: ["24", "29", "34", "39", "44", "49", "50"],
+        ageReason: "選んだ年代に向けた転職ガイドがあります。",
+        salaryMinimum: 200,
+        offices: ["東京都", "北海道", "宮城県", "神奈川県", "静岡県", "愛知県", "京都府", "大阪府", "兵庫県", "岡山県", "広島県", "福岡県"],
+      },
+      mynavi: {
+        ageGroups: ["24", "29"],
+        ageReason: "若手・第二新卒を歓迎する求人の掲載例があります。",
+        salaryMinimum: 200,
+        jobLocations: { it: ["東京都"], technical: ["東京都"], other: ["東京都", "長野県"] },
+      },
+    };
     const form = document.querySelector(".diagnosis-form");
     const job = document.querySelector("#diagnosis-job");
+    const age = document.querySelector("#diagnosis-age");
+    const income = document.querySelector("#diagnosis-income");
+    const gender = document.querySelector("#diagnosis-gender");
     const results = document.querySelector("#diagnosis-results");
     const resultTitle = document.querySelector("#diagnosis-result-title");
+    const conditionsText = document.querySelector("#diagnosis-conditions");
+    const resultNote = document.querySelector("#diagnosis-result-note");
+    const otherAgents = document.querySelector("#diagnosis-other-agents");
     const matchList = results.querySelector(".diagnosis-matches");
     const matchTemplate = document.querySelector("#diagnosis-match-template");
     const locationPicker = document.querySelector("#diagnosis-location");
@@ -388,14 +433,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
       locationCount.textContent = count ? `${count}件選択中` : "指定なし";
     }
 
+    function listLocations(locations) {
+      const firstTwo = locations.slice(0, 2).join("・");
+      return locations.length > 2 ? `${firstTwo}ほか${locations.length - 2}件` : firstTwo;
+    }
+
+    function getEvidence(criteria, locations) {
+      const evidence = [];
+      if (criteria.ageGroups.includes(age.value)) evidence.push(criteria.ageReason);
+      if (income.value !== "" && Number(income.value) >= criteria.salaryMinimum) {
+        evidence.push("希望年収の下限から公開求人を検索できます。");
+      }
+      const offices = locations.filter(location => criteria.offices?.includes(location));
+      const jobLocations = locations.filter(location => criteria.jobLocations?.[job.value]?.includes(location));
+      if (offices.length) evidence.push(`${listLocations(offices)}に拠点があります。`);
+      if (jobLocations.length) evidence.push(`${listLocations(jobLocations)}で求人の掲載例があります。`);
+      return evidence;
+    }
+
     locationPicker.addEventListener("change", updateLocationCount);
     locationPicker.querySelector(".diagnosis-clear").addEventListener("click", () => {
+      if (locationPicker.querySelector("input:checked")) results.hidden = true;
       for (const prefecture of prefectures) prefecture.checked = false;
       updateLocationCount();
     });
 
-    job.addEventListener("change", () => {
-      results.hidden = true;
+    form.addEventListener("change", (event) => {
+      if (event.target !== gender) results.hidden = true;
     });
 
     form.addEventListener("submit", (event) => {
@@ -403,16 +467,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
       const matches = matchesByJob[job.value];
       if (!matches) return;
 
-      const items = matches.map(({ service, reason }) => {
+      const locations = [...locationPicker.querySelectorAll("input:checked")].map(input => input.value);
+      const conditions = [
+        age.value && age.selectedOptions[0].textContent,
+        income.value && `希望年収 ${income.selectedOptions[0].textContent}`,
+        locations.length && `希望勤務地 ${listLocations(locations)}`,
+      ].filter(Boolean);
+      const evaluated = matches.map(match => ({ ...match, evidence: getEvidence(serviceCriteria[match.service], locations) }));
+      const mostEvidence = Math.max(...evaluated.map(match => match.evidence.length));
+      const shortlist = evaluated.filter(match => match.evidence.length === mostEvidence);
+
+      const items = shortlist.map(({ service, reason, evidence }) => {
         const item = matchTemplate.content.cloneNode(true);
-        const link = item.querySelector("a");
+        const link = item.querySelector(".diagnosis-match-name");
+        const evidenceList = item.querySelector(".diagnosis-evidence");
         link.href = `#${service}`;
         link.textContent = document.getElementById(service).querySelector("h3").textContent;
-        item.querySelector("p").textContent = reason;
+        item.querySelector(".diagnosis-match-reason").textContent = reason;
+        for (const detail of evidence) {
+          const entry = document.createElement("li");
+          entry.textContent = detail;
+          evidenceList.append(entry);
+        }
+        evidenceList.hidden = evidence.length === 0;
         return item;
       });
 
       resultTitle.textContent = `「${job.selectedOptions[0].textContent}」の候補`;
+      conditionsText.textContent = conditions.join(" ／ ");
+      conditionsText.hidden = conditions.length === 0;
+      resultNote.textContent = "選択条件に関する情報が確認できなかったため、職種をもとに候補を表示しています。";
+      resultNote.hidden = conditions.length === 0 || mostEvidence > 0;
+      otherAgents.hidden = shortlist.length === 3;
       matchList.replaceChildren(...items);
       results.hidden = false;
       resultTitle.focus();
