@@ -17,7 +17,291 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Y
 .hero-copy{text-shadow:0 1px 5px #fff}.hero h1{letter-spacing:.025em}.compare th img{height:auto;aspect-ratio:3/2;object-fit:contain;object-position:center;background:#f2f5f4}.compare thead th:not(:first-child){padding:13px 8px}.compare td{line-height:1.7}.compare tbody tr:nth-child(even) td{background:#f4f8f8}
 .card{border-radius:8px;overflow:hidden;box-shadow:0 4px 13px #263b4310}.card h3{border-bottom:1px solid #dce6e3;padding-bottom:12px}.card-image{height:auto!important;max-width:520px;aspect-ratio:3/2;object-fit:contain;object-position:center;margin:0 auto;background:#f4f6f5}.points li{background:#f3f8f5;border:0;padding:10px 12px;margin-bottom:6px;border-radius:4px}.button{max-width:520px;margin-left:auto;margin-right:auto;border-radius:24px}.steps .step{border-top:3px solid #17655c;border-radius:5px}.steps .step:nth-child(2){border-top-color:#145a91}.steps .step:nth-child(3){border-top-color:#d86524}.sources{border:1px solid #dfe7e3}
 @media(max-width:700px){.hero{min-height:0;aspect-ratio:1752/897;background-size:contain;background-position:center;background-color:#f1f4f3}.hero-copy{max-width:60%;background:rgba(255,255,255,.45);border-radius:4px}.compare th img{height:auto;aspect-ratio:3/2}.card-image{height:auto!important;max-width:100%;aspect-ratio:3/2}.card h3{font-size:20px}.points li{padding:8px 10px}}
-</style></head><body><div class="page" id="top"><header><a href="#top" class="logo">CAREER <span>SELECT</span></a><div class="headnote">転職サービスをわかりやすく比較 <span class="pr">確認用</span></div></header><main><section class="hero"><div class="hero-copy"><div class="hero-kicker">自分に合う相談先を探す</div><h1>転職エージェント<br><em>3社を比較</em></h1><p>求人の探し方・<br class="mobile-only">サポート内容を比較</p></div></section><div class="band">リクルートエージェント・doda・マイナビ転職エージェントを比較</div><section class="container" id="comparison"><h2 class="section-title"><small>＼ 気になる3サービスをひと目で ／</small>転職サービスの比較表</h2><p class="hint">表を横にスクロールして3サービスを比較できます →</p><div class="table-scroll" role="region" aria-label="比較表。横にスクロールできます" tabindex="0"><table class="compare"><thead><tr><th>比較項目</th><th><a href="#recruit"><span class="rank-circle">1</span>リクルートエージェント</a><img src="service-recruit-v3.png" alt=""></th><th><a href="#doda"><span class="rank-circle">2</span>doda</a><img src="service-doda-v3.png" alt=""></th><th><a href="#mynavi"><span class="rank-circle">3</span>マイナビ転職エージェント</a><img src="service-mynavi-v3.png" alt=""></th></tr></thead><tbody><tr><th>利用料金</th><td>無料</td><td>無料</td><td>無料</td></tr><tr><th>求人の探し方</th><td>求人検索・アドバイザーによる紹介</td><td>求人検索・エージェントによる紹介</td><td>キャリアアドバイザーによる紹介</td></tr><tr><th>主な支援</th><td>書類添削・面接対策・条件交渉</td><td>書類添削・面接サポート・日程調整</td><td>転職相談・求人紹介・選考支援</td></tr><tr><th>サービス詳細</th><td><a class="small-btn" href="#recruit">詳しく見る</a></td><td><a class="small-btn" href="#doda">詳しく見る</a></td><td><a class="small-btn" href="#mynavi">詳しく見る</a></td></tr></tbody></table></div><p class="notes">画像はイメージです。利用状況や求人状況により、受けられる支援は異なります。登録・紹介・選考の結果を保証するものではありません。</p><p class="disclaimer">確認用の制作版です。掲載順は依頼で指定された順であり、人気・満足度・サービスの優劣を示す順位ではありません。最新の条件は各社の公式サイトでご確認ください。</p></section><section class="container detail-section" id="details"><h2 class="section-title"><small>3サービスの</small>特徴を詳しく比較</h2><div class="detail-list">
+.diagnosis {
+  padding: 28px 22px 32px;
+  background: #f1f7f5;
+}
+.diagnosis .section-title {
+  margin-bottom: 16px;
+}
+.diagnosis-form {
+  padding: 20px;
+  border: 1px solid #d3e2dd;
+  border-top: 3px solid var(--green);
+  border-radius: 8px;
+  background: #fff;
+}
+.diagnosis-fields {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+}
+.diagnosis-field {
+  display: grid;
+  min-width: 0;
+  grid-column: span 2;
+  align-content: start;
+  gap: 5px;
+}
+.diagnosis-wide {
+  grid-column: span 3;
+}
+.diagnosis-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+.diagnosis select,
+.diagnosis summary {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid #839799;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--navy);
+  font: inherit;
+  cursor: pointer;
+}
+.diagnosis select:focus-visible,
+.diagnosis summary:focus-visible,
+.diagnosis button:focus-visible,
+.diagnosis input:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+.diagnosis summary small {
+  color: #4b5f6b;
+}
+.diagnosis-location-options {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  border: 1px solid #d3e2dd;
+  border-radius: 4px;
+  background: #f1f7f5;
+}
+.diagnosis-region {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.diagnosis-region legend {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+.diagnosis-region label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 36px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.diagnosis-region input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--green);
+}
+.diagnosis-clear {
+  justify-self: start;
+  min-height: 36px;
+  padding: 2px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--green);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.diagnosis-submit {
+  display: block;
+  width: min(100%, 280px);
+  min-height: 44px;
+  margin: 18px auto 0;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 24px;
+  background: #e7edeb;
+  color: #4b5f6b;
+  font: inherit;
+  font-weight: 700;
+}
+.diagnosis-note {
+  margin: 6px 0 0;
+  color: #4b5f6b;
+  font-size: 13px;
+  text-align: center;
+}
+@media (max-width: 560px) {
+  .diagnosis { padding: 20px 14px 24px; }
+  .diagnosis-form { padding: 14px; }
+  .diagnosis-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .diagnosis-field { grid-column: auto; }
+  .diagnosis-wide, .diagnosis-income { grid-column: 1 / -1; }
+}
+</style></head><body><div class="page" id="top"><header><a href="#top" class="logo">CAREER <span>SELECT</span></a><div class="headnote">転職サービスをわかりやすく比較 <span class="pr">確認用</span></div></header><main><section class="hero"><div class="hero-copy"><div class="hero-kicker">自分に合う相談先を探す</div><h1>転職エージェント<br><em>3社を比較</em></h1><p>求人の探し方・<br class="mobile-only">サポート内容を比較</p></div></section>
+<section class="diagnosis" id="diagnosis" aria-labelledby="diagnosis-title">
+  <h2 class="section-title" id="diagnosis-title">転職エージェント診断</h2>
+  <form class="diagnosis-form" aria-labelledby="diagnosis-title" autocomplete="off">
+    <div class="diagnosis-fields">
+      <div class="diagnosis-field">
+        <label class="diagnosis-label" for="diagnosis-gender">性別</label>
+        <select id="diagnosis-gender">
+          <option value="">選択する</option>
+          <option>男性</option>
+          <option>女性</option>
+        </select>
+      </div>
+      <div class="diagnosis-field">
+        <label class="diagnosis-label" for="diagnosis-age">年齢</label>
+        <select id="diagnosis-age">
+          <option value="">選択する</option>
+          <option>24歳以下</option>
+          <option>25歳〜29歳</option>
+          <option>30歳〜34歳</option>
+          <option>35歳〜39歳</option>
+          <option>40歳〜44歳</option>
+          <option>45歳〜49歳</option>
+          <option>50歳以上</option>
+        </select>
+      </div>
+      <div class="diagnosis-field diagnosis-income">
+        <label class="diagnosis-label" for="diagnosis-income">年収</label>
+        <select id="diagnosis-income">
+          <option value="">選択する</option>
+          <option>〜199万円</option>
+          <option>200〜299万円</option>
+          <option>300〜399万円</option>
+          <option>400〜499万円</option>
+          <option>500〜599万円</option>
+          <option>600〜699万円</option>
+          <option>700〜799万円</option>
+          <option>800〜899万円</option>
+          <option>900〜999万円</option>
+          <option>1000万円〜</option>
+        </select>
+      </div>
+      <div class="diagnosis-field diagnosis-wide">
+        <label class="diagnosis-label" for="diagnosis-job">職種</label>
+        <select id="diagnosis-job">
+          <option value="">選択する</option>
+          <option>ITエンジニア</option>
+          <option>技術職・クリエイティブ</option>
+          <option>医療・福祉・保育</option>
+          <option>不動産・金融</option>
+          <option>公務員</option>
+          <option>第二新卒・フリーター・無職</option>
+          <option>その他</option>
+        </select>
+      </div>
+      <div class="diagnosis-field diagnosis-wide" role="group" aria-labelledby="diagnosis-location-label">
+        <span class="diagnosis-label" id="diagnosis-location-label">勤務地</span>
+        <details id="diagnosis-location">
+          <summary><span id="diagnosis-location-count">指定なし</span> <small>（複数選択可）</small></summary>
+          <div class="diagnosis-location-options">
+            <button type="button" class="diagnosis-clear">指定なしに戻す</button>
+            <fieldset class="diagnosis-region">
+              <legend>関東地方</legend>
+              <label><input type="checkbox" value="東京都">東京都</label>
+              <label><input type="checkbox" value="神奈川県">神奈川県</label>
+              <label><input type="checkbox" value="千葉県">千葉県</label>
+              <label><input type="checkbox" value="埼玉県">埼玉県</label>
+              <label><input type="checkbox" value="栃木県">栃木県</label>
+              <label><input type="checkbox" value="群馬県">群馬県</label>
+              <label><input type="checkbox" value="茨城県">茨城県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>北海道・東北地方</legend>
+              <label><input type="checkbox" value="北海道">北海道</label>
+              <label><input type="checkbox" value="宮城県">宮城県</label>
+              <label><input type="checkbox" value="青森県">青森県</label>
+              <label><input type="checkbox" value="岩手県">岩手県</label>
+              <label><input type="checkbox" value="秋田県">秋田県</label>
+              <label><input type="checkbox" value="山形県">山形県</label>
+              <label><input type="checkbox" value="福島県">福島県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>中部地方</legend>
+              <label><input type="checkbox" value="愛知県">愛知県</label>
+              <label><input type="checkbox" value="静岡県">静岡県</label>
+              <label><input type="checkbox" value="山梨県">山梨県</label>
+              <label><input type="checkbox" value="長野県">長野県</label>
+              <label><input type="checkbox" value="新潟県">新潟県</label>
+              <label><input type="checkbox" value="富山県">富山県</label>
+              <label><input type="checkbox" value="石川県">石川県</label>
+              <label><input type="checkbox" value="福井県">福井県</label>
+              <label><input type="checkbox" value="岐阜県">岐阜県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>近畿地方</legend>
+              <label><input type="checkbox" value="大阪府">大阪府</label>
+              <label><input type="checkbox" value="兵庫県">兵庫県</label>
+              <label><input type="checkbox" value="京都府">京都府</label>
+              <label><input type="checkbox" value="滋賀県">滋賀県</label>
+              <label><input type="checkbox" value="奈良県">奈良県</label>
+              <label><input type="checkbox" value="三重県">三重県</label>
+              <label><input type="checkbox" value="和歌山県">和歌山県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>中国地方</legend>
+              <label><input type="checkbox" value="広島県">広島県</label>
+              <label><input type="checkbox" value="岡山県">岡山県</label>
+              <label><input type="checkbox" value="山口県">山口県</label>
+              <label><input type="checkbox" value="鳥取県">鳥取県</label>
+              <label><input type="checkbox" value="島根県">島根県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>四国地方</legend>
+              <label><input type="checkbox" value="愛媛県">愛媛県</label>
+              <label><input type="checkbox" value="高知県">高知県</label>
+              <label><input type="checkbox" value="徳島県">徳島県</label>
+              <label><input type="checkbox" value="香川県">香川県</label>
+            </fieldset>
+            <fieldset class="diagnosis-region">
+              <legend>九州・沖縄地方</legend>
+              <label><input type="checkbox" value="福岡県">福岡県</label>
+              <label><input type="checkbox" value="佐賀県">佐賀県</label>
+              <label><input type="checkbox" value="長崎県">長崎県</label>
+              <label><input type="checkbox" value="熊本県">熊本県</label>
+              <label><input type="checkbox" value="大分県">大分県</label>
+              <label><input type="checkbox" value="宮崎県">宮崎県</label>
+              <label><input type="checkbox" value="鹿児島県">鹿児島県</label>
+              <label><input type="checkbox" value="沖縄県">沖縄県</label>
+            </fieldset>
+          </div>
+        </details>
+      </div>
+    </div>
+    <button type="button" class="diagnosis-submit" aria-describedby="diagnosis-note" disabled>この条件で診断する</button>
+    <p class="diagnosis-note" id="diagnosis-note">確認版では条件の選択まで行えます。</p>
+  </form>
+</section>
+<script>
+  {
+    const locationPicker = document.querySelector("#diagnosis-location");
+    const locationCount = document.querySelector("#diagnosis-location-count");
+    const prefectures = locationPicker.querySelectorAll("input");
+
+    function updateLocationCount() {
+      const count = locationPicker.querySelectorAll("input:checked").length;
+      locationCount.textContent = count ? `${count}件選択中` : "指定なし";
+    }
+
+    locationPicker.addEventListener("change", updateLocationCount);
+    locationPicker.querySelector(".diagnosis-clear").addEventListener("click", () => {
+      for (const prefecture of prefectures) prefecture.checked = false;
+      updateLocationCount();
+    });
+  }
+</script>
+<div class="band">リクルートエージェント・doda・マイナビ転職エージェントを比較</div><section class="container" id="comparison"><h2 class="section-title"><small>＼ 気になる3サービスをひと目で ／</small>転職サービスの比較表</h2><p class="hint">表を横にスクロールして3サービスを比較できます →</p><div class="table-scroll" role="region" aria-label="比較表。横にスクロールできます" tabindex="0"><table class="compare"><thead><tr><th>比較項目</th><th><a href="#recruit"><span class="rank-circle">1</span>リクルートエージェント</a><img src="service-recruit-v3.png" alt=""></th><th><a href="#doda"><span class="rank-circle">2</span>doda</a><img src="service-doda-v3.png" alt=""></th><th><a href="#mynavi"><span class="rank-circle">3</span>マイナビ転職エージェント</a><img src="service-mynavi-v3.png" alt=""></th></tr></thead><tbody><tr><th>利用料金</th><td>無料</td><td>無料</td><td>無料</td></tr><tr><th>求人の探し方</th><td>求人検索・アドバイザーによる紹介</td><td>求人検索・エージェントによる紹介</td><td>キャリアアドバイザーによる紹介</td></tr><tr><th>主な支援</th><td>書類添削・面接対策・条件交渉</td><td>書類添削・面接サポート・日程調整</td><td>転職相談・求人紹介・選考支援</td></tr><tr><th>サービス詳細</th><td><a class="small-btn" href="#recruit">詳しく見る</a></td><td><a class="small-btn" href="#doda">詳しく見る</a></td><td><a class="small-btn" href="#mynavi">詳しく見る</a></td></tr></tbody></table></div><p class="notes">画像はイメージです。利用状況や求人状況により、受けられる支援は異なります。登録・紹介・選考の結果を保証するものではありません。</p><p class="disclaimer">確認用の制作版です。掲載順は依頼で指定された順であり、人気・満足度・サービスの優劣を示す順位ではありません。最新の条件は各社の公式サイトでご確認ください。</p></section><section class="container detail-section" id="details"><h2 class="section-title"><small>3サービスの</small>特徴を詳しく比較</h2><div class="detail-list">
 <article class="card" id="recruit"><div class="tag">掲載順 1</div><h3>リクルートエージェント</h3><p class="intro">相談から選考まで、転職活動を支援</p><img class="card-image" src="service-recruit-v3.png" alt=""><h4 class="minor">基本情報</h4><table class="info"><tr><th>利用料金</th><td>無料</td></tr><tr><th>求人の探し方</th><td>求人検索・アドバイザーによる紹介</td></tr><tr><th>主な支援</th><td>書類添削・面接対策・条件交渉</td></tr></table><h4 class="points-title">リクルートエージェントのポイント</h4><ul class="points"><li>非公開求人の紹介がある</li><li>応募書類の添削や面接対策を受けられる</li><li>内定後の条件交渉や入社日調整を支援</li></ul><p class="disclaimer">求人状況によっては面談が難しい場合があります。</p><a class="button" href="https://www.r-agent.com/" target="_blank" rel="noopener noreferrer">リクルートエージェントの公式サイトを見る ›</a></article>
 <article class="card" id="doda"><div class="tag">掲載順 2</div><h3>doda</h3><p class="intro">求人検索と紹介サービスを活用</p><img class="card-image" src="service-doda-v3.png" alt=""><h4 class="minor">基本情報</h4><table class="info"><tr><th>利用料金</th><td>無料</td></tr><tr><th>求人の探し方</th><td>求人検索・エージェントによる紹介</td></tr><tr><th>主な支援</th><td>書類添削・面接サポート・日程調整</td></tr></table><h4 class="points-title">dodaのポイント</h4><ul class="points"><li>非公開求人を含む求人紹介</li><li>企業に合わせた書類添削や面接サポート</li><li>面接日程や入社時期の調整を支援</li></ul><p class="disclaimer">紹介サービスには利用条件があります。</p><a class="button" href="https://doda.jp/" target="_blank" rel="noopener noreferrer">dodaの公式サイトを見る ›</a></article>
 <article class="card" id="mynavi"><div class="tag">掲載順 3</div><h3>マイナビ転職エージェント</h3><p class="intro">希望に合わせてキャリアを相談</p><img class="card-image" src="service-mynavi-v3.png" alt=""><h4 class="minor">基本情報</h4><table class="info"><tr><th>利用料金</th><td>無料</td></tr><tr><th>求人の探し方</th><td>キャリアアドバイザーによる紹介</td></tr><tr><th>主な支援</th><td>転職相談・求人紹介・選考支援</td></tr></table><h4 class="points-title">マイナビ転職エージェントのポイント</h4><ul class="points"><li>業種・職種別の専任キャリアアドバイザー</li><li>相談や希望に沿った求人紹介</li><li>応募書類や面接に関する支援</li></ul><p class="disclaimer">サービス名・対象リンクは正式な入稿情報との照合が必要です。</p><a class="button" href="https://mynavi-agent.jp/" target="_blank" rel="noopener noreferrer">公式サイトを見る ›</a></article>
